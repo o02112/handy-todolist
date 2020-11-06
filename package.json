@@ -1,0 +1,18 @@
+{
+  "name": "mern",
+  "version": "1.0.0",
+  "description": "MariaDB + ExpressJs + ReactJs + NodeJs project course startup.",
+  "main": "app.js",
+  "dependencies": {
+    "config": "^3.3.2",
+    "express": "^4.17.1",
+    "pg": "^8.4.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
