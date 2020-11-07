@@ -2,6 +2,7 @@
 export const urls = {
   listItemUrl: 'http://localhost:5000/api/todolist/listItem',
   addItemUrl: 'http://localhost:5000/api/todolist/addItem',
+  updateItemUrl: 'http://localhost:5000/api/todolist/updateItem',
   finisheItemUrl: 'http://localhost:5000/api/todolist/finishItem',
   deleteItemUrl: 'http://localhost:5000/api/todolist/deleteItem',
 }
@@ -42,7 +43,15 @@ export const queryAddItem = (title) => {
 }
 
 
-export const queryFinishItem = (itemId) => {
+export const queryUpdateItem = (title, itemId) => {
+  return post(urls.updateItemUrl, { title, itemId })
+    .then(response => {
+      return response.json();
+    })
+}
+
+
+export const queryToggleFinishItem = (itemId) => {
   return post(urls.finisheItemUrl, { itemId })
   .then(response => {
     return response.json();

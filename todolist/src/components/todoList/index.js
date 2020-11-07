@@ -5,6 +5,7 @@ import TodoItemInput from './components/ItemInput';
 import TodoItemList from './components/ItemList';
 // import { todos, setTodos, handleClickAway } from './hooks'
 
+import './index.css'
 import {todoListContext} from './context';
 import {useTodoListHook} from './hooks'
 
@@ -17,10 +18,11 @@ const TodoList = () => {
     itemState,
     dispatch,
     handleClickAway,
+    textEditorRef,
   } = useTodoListHook();
 
 
-  return (<todoListContext.Provider value={{ dispatch, itemState }}>
+  return (<todoListContext.Provider value={{ dispatch, itemState, textEditorRef }}>
     <ClickAwayListener onClickAway={handleClickAway}>
       <Container maxWidth="sm" style={{
           paddingTop: 40

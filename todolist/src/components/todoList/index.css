@@ -1,0 +1,4 @@
+
+#todolist .MuiListItemText-root span {
+  user-select: none;
+}

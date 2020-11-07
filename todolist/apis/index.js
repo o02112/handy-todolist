@@ -38,7 +38,7 @@ router.post('/addItem', (req, res) => {
 
   insertItem(title, (err, response) => {
     console.log(err, response)
-    res.status(200).json({ err, data: response })
+    res.status(200).json({ err, data: { rowCount: response.rowCount }})
   })
 })
 
@@ -57,7 +57,7 @@ router.post('/updateItem', (req, res) => {
 
   updateItem({ title, itemId }, (err, response) => {
     console.log(err, response)
-    res.status(200).json({ err, data: response })
+    res.status(200).json({ err, data: { rowCount: response.rowCount }})
   })
 })
 
@@ -78,7 +78,7 @@ router.post('/deleteItem', (req, res) => {
 
   deleteItem(itemId , (err, response) => {
     console.log(err, response)
-    res.status(200).json({ err, data: response })
+    res.status(200).json({ err, data: { rowCount: response.rowCount }})
   })
 })
 

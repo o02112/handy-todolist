@@ -1,62 +1,83 @@
 import { useState, useEffect, useContext } from 'react';
+
 import {todoListContext} from '../context';
+import {queryToggleFinishItem, queryUpdateItem, queryDeleteItem} from '../urls';
 
 
 export const useItemHook = (props) => {
     const { todoItem: propsTodoItem = {} } = props || {}
-    const [todoItem, setTodoItem] = useState([])
-    // const [ selected, setSelectStatus ] = useState(false)
+    // const [todoItem, setTodoItem] = useState({})
     const [editing, setEditingState] = useState(false)
     const [focusIn, setFocusState] = useState(false)
-    const {dispatch, itemState} = useContext(todoListContext)
+    const [finished, setFinishState] = useState(false)
+    const [title, setTitleState] = useState(propsTodoItem.item_title)
+    const {dispatch, itemState, textEditorRef} = useContext(todoListContext)
 
     let pending = false;
     let clickTimeout;
 
     useEffect(() => {
-      setTodoItem(propsTodoItem);
-
       handleFocusState(itemState);
+      handleFinishState(itemState);
+    }, [itemState]);
 
-    }, [propsTodoItem, itemState]);
+    useEffect(() => {
+      setTitleState(propsTodoItem.item_title)
+    }, [propsTodoItem])
+
+    useEffect(() => {
+      if(editing) { // 自动聚焦到编辑器，且将光标置于文本的末尾
+        const editor = textEditorRef.current;
+        const textLen = editor.value.length;
+        editor.setSelectionRange(textLen, textLen);
+      }
+    }, [ editing ])
+
+
+    const handleFinishState = (newState) => {
+      if(propsTodoItem.item_finished === undefined) return;
+
+      if(propsTodoItem.item_id in newState.payload.toggleItemIds) {
+        setFinishState(newState.payload.toggleItemIds[propsTodoItem.item_id]);
+      } else {
+        setFinishState(propsTodoItem.item_finished);
+      }
+    }
 
     const handleFocusState = (newState) => {
-      const newStatefocus = newState.payload.focusItemId === todoItem.item_id;
-      const newStateEdit = newState.payload.editItemId === todoItem.item_id;
-      const focusOut = focusIn && !newStatefocus; // 失去聚焦
+      const newStatefocus = newState.payload.focusItemId === propsTodoItem.item_id;
+      const newStateEdit = newState.payload.editItemId === propsTodoItem.item_id;
       const editEnd = (editing && !newStateEdit); // 完成编辑
 
-      // 进入编辑状态，将同时设置focus 和 editing 为true
-      // 下面的两行代码也能正常工作
-      if(newStatefocus) setFocusState(true);
-      if(newStateEdit) setEditingState(true);
-
-      if(focusOut) {
-        setFocusState(false);
-
-        if(editing) setEditingState(false);
+      if(editEnd) { console.log(newState.payload);
+        onUpdate(newState.payload.textEditorValue);
       }
-      if(editEnd) setEditingState(false);   // 从编辑状态退出，不失焦
-      
-      // console.log(newState);
+
+      setFocusState(newStatefocus);
+      setEditingState(newStateEdit);
+
+    }
+
+    const changeIntoEditMode = () => {
+      dispatch({
+        type: 'editingStartNew',
+        payload: {
+          editItemId: propsTodoItem.item_id,
+          focusItemId: propsTodoItem.item_id,
+        }
+      })
     }
 
 
     const titleClick = () => {
+
       // 编辑状态下，不响应点击
       // 不需要再次聚焦或进入编辑状态
       if (editing) return;
 
       if (pending) { // 双击
-        dispatch({
-          type: 'edit',
-          payload: {
-            editItemId: todoItem.item_id,
-            focusItemId: todoItem.item_id,
-          }
-        })
+        changeIntoEditMode();
 
-        // clear
         clearTimeout(clickTimeout);
         pending = false;
         return;
@@ -70,12 +91,62 @@ export const useItemHook = (props) => {
 
         if(focusIn) return;
         dispatch({
-          type: 'focus',
-          payload: { focusItemId: todoItem.item_id }
+          type: 'focusChange',
+          payload: { focusItemId: propsTodoItem.item_id }
         })
-      }, 300);
+      }, 250);
+    }
+
+    const onClickEditIcon = () => {
+      changeIntoEditMode();
+    }
+
+    const onClickDeleteIcon = () => {
+      if(typeof props.deleteItem === 'function') {
+        props.deleteItem(propsTodoItem.item_id);
+      }
+    }
+
+    const onClickDoneOrRefreshIcon = () => {
+      queryToggleFinishItem(propsTodoItem.item_id)
+        .then((data = {}) => {
+          if(data.data && data.data.rowCount) {
+            dispatch({
+              type: 'toggleFinish',
+              payload: {
+                toggleItemIds: { [propsTodoItem.item_id]: !finished }
+              }
+            })
+          }
+
+        })
+    }
+
+    const onUpdate = (newTitle) => {
+      if(newTitle === title) return;
+
+      setTitleState(newTitle);
+      queryUpdateItem(newTitle, propsTodoItem.item_id)
+        .then((data = {}) => {
+          console.log(data);
+          if(data.data && data.data.rowCount) {
+            // 更新成功
+          }
+        })
     }
 
 
-    return { editing, focusIn, todoItem, titleClick }
+    return {
+      title,
+      setTitleState,
+      editing,
+      focusIn,
+      finished,
+      titleClick,
+      onClickEditIcon,
+      onClickDeleteIcon,
+      onClickDoneOrRefreshIcon,
+      onUpdate,
+      textEditorRef,
+    }
 }

@@ -15,7 +15,9 @@ import {withStyles, useTheme} from '@material-ui/core/styles';
 import {
   Done as DoneIcon,
   EditSharp as EditIcon,
-  DeleteOutlineSharp as DeleteIcon} from '@material-ui/icons';
+  DeleteOutlineSharp as DeleteIcon,
+  Refresh as RefreshIcon,
+} from '@material-ui/icons';
 // import ItemOptions from './ItemOptions'
 
 import { useItemHook } from './ItemHook';
@@ -29,23 +31,31 @@ const StyledListItemText = withStyles({
 
 const Item = (props) => {
   const {
+    title,
     editing,
     focusIn,
-    todoItem,
+    finished,
     focusState,
     titleClick,
+    onClickEditIcon,
+    onClickDeleteIcon,
+    onClickDoneOrRefreshIcon,
+    onUpdate,
+    textEditorRef,
   } = useItemHook(props);
   const ItemTitle = () => {
     if (editing) {
-      return (<TextareaAutosize placeholder="Edit TODO..." defaultValue={todoItem.item_title} rowsMin={5} style={{
-          width: '360px'
-        }} onClick={e => {
-          e.preventDefault();
-          e.stopPropagation();
-          console.log('click', e);
-        }}/>)
+      return (
+        <TextareaAutosize
+          ref={textEditorRef}
+          autoFocus={true}
+          placeholder="Edit TODO..."
+          defaultValue={title}
+          rowsMin={5}
+          style={{ width: '516px' }}
+        />)
     } else {
-      return todoItem.item_title || ''
+      return title;
     }
   }
 
@@ -55,36 +65,46 @@ const Item = (props) => {
     exit: theme.transitions.duration.leavingScreen
   };
 
-
   return (
-    <ListItem button="button" selected={focusIn} onClick={titleClick}>
+    <ListItem selected={focusIn} onClick={titleClick}>
       {
-        todoItem.item_finished
+        finished
           ? <ListItemIcon><DoneIcon/></ListItemIcon>
           : null
       }
       {
-        todoItem.item_finished
+        finished
           ? <StyledListItemText primary={<ItemTitle />}/>
           : <ListItemText primary={<ItemTitle />}/>
       }
-      <Zoom in={focusIn} timeout={transitionDuration} unmountOnExit>
-        <Fab size="small">
-          <DoneIcon/>
-        </Fab>
-      </Zoom>
 
-      <Zoom in={focusIn} timeout={transitionDuration} unmountOnExit>
-        <Fab size="small">
-          <EditIcon/>
-        </Fab>
-      </Zoom>
+      {
+        editing
+        ? null
+        : (<>
+          <Zoom in={focusIn} timeout={transitionDuration} unmountOnExit>
+            <Fab size="small" onClick={onClickDoneOrRefreshIcon}>
+              {
+                finished
+                ? <RefreshIcon />
+                : <DoneIcon/>
+              }
+            </Fab>
+          </Zoom>
 
-      <Zoom in={focusIn} timeout={transitionDuration} unmountOnExit>
-        <Fab size="small">
-          <DeleteIcon/>
-        </Fab>
-      </Zoom>
+          <Zoom in={focusIn} timeout={transitionDuration} unmountOnExit>
+            <Fab size="small" onClick={onClickEditIcon}>
+              <EditIcon/>
+            </Fab>
+          </Zoom>
+
+          <Zoom in={focusIn} timeout={transitionDuration} unmountOnExit>
+            <Fab size="small" onClick={onClickDeleteIcon}>
+              <DeleteIcon/>
+            </Fab>
+          </Zoom>
+        </>)
+      }
 
     </ListItem>)
 }

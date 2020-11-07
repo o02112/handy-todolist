@@ -6,6 +6,9 @@ const ItemInput = (props) => {
   const [title, changeTitle] = useState('');
 
   const addItem = title => {
+    title = title.trim();
+    if(title === '') return;
+    
     props.addItem(title);
     changeTitle('');
   }
