@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 
 import {todoListContext} from '../context';
-import {queryToggleFinishItem, queryUpdateItem, queryDeleteItem} from '../urls';
+import {queryToggleFinishItem, queryUpdateItem} from '../urls';
 let clickTimeout;
 let pending = false;
 
@@ -140,7 +140,6 @@ export const useItemHook = (props) => {
       onClickEditIcon,
       onClickDeleteIcon,
       onClickDoneOrRefreshIcon,
-      onUpdate,
       textEditorRef,
     }
 }

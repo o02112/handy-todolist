@@ -1,11 +1,9 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  Button,
   Zoom,
-  Tooltip,
   Fab,
   colors,
   TextareaAutosize,
@@ -33,12 +31,10 @@ const Item = (props) => {
     editing,
     focusIn,
     finished,
-    focusState,
     titleClick,
     onClickEditIcon,
     onClickDeleteIcon,
     onClickDoneOrRefreshIcon,
-    onUpdate,
     textEditorRef,
   } = useItemHook(props);
   const ItemTitle = () => {

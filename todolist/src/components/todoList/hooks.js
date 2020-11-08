@@ -2,8 +2,6 @@ import {useState, useEffect, useReducer, useRef} from 'react';
 import {
   queryListItem,
   queryAddItem,
-  queryUpdateItem,
-  queryToggleFinishItem,
   queryDeleteItem,
 } from './urls';
 

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 
 import {Container, ClickAwayListener} from '@material-ui/core';
 import TodoItemInput from './components/ItemInput';
