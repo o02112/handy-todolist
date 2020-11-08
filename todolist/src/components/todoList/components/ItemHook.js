@@ -3,12 +3,11 @@ import { useState, useEffect, useContext } from 'react';
 import {todoListContext} from '../context';
 import {queryToggleFinishItem, queryUpdateItem} from '../urls';
 let clickTimeout;
-let pending = false;
+let isPending = false;
 
 
 export const useItemHook = (props) => {
     const { todoItem: propsTodoItem = {} } = props || {}
-    // const [todoItem, setTodoItem] = useState({})
     const [editing, setEditingState] = useState(false)
     const [focusIn, setFocusState] = useState(false)
     const [finished, setFinishState] = useState(false)
@@ -72,25 +71,27 @@ export const useItemHook = (props) => {
 
       // 编辑状态下，不响应点击
       if (editing) return;
-      if (pending && focusIn) { // 双击
+      if (isPending && focusIn) { // 双击
         changeIntoEditMode();
 
         clearTimeout(clickTimeout);
-        pending = false;
+        isPending = false;
         return;
       }
 
       // 单击，聚焦
-      pending = true;
+      isPending = true;
+      clickTimeout = setTimeout(() => {
+        isPending = false;
+      }, 250);
+
       if(focusIn) return;
       dispatch({
         type: 'focusChange',
-        payload: { focusItemId: propsTodoItem.item_id }
+        payload: {
+          focusItemId: propsTodoItem.item_id,
+        }
       })
-
-      clickTimeout = setTimeout(() => {
-        pending = false;
-      }, 250);
     }
 
     const onClickEditIcon = () => {
@@ -110,15 +111,16 @@ export const useItemHook = (props) => {
             dispatch({
               type: 'toggleFinish',
               payload: {
-                toggleItemIds: { [propsTodoItem.item_id]: !finished }
+                [propsTodoItem.item_id]: !finished,
               }
             })
           }
         })
     }
 
-    const onUpdate = (newTitle) => {
-      if(newTitle === title) return;
+    const onUpdate = (newTitle = '') => {
+      if(typeof newTitle !== 'string') return;
+      if(newTitle.trim() === title || newTitle.trim() === '') return;
 
       setTitleState(newTitle);
       queryUpdateItem(newTitle, propsTodoItem.item_id)

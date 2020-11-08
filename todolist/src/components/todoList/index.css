@@ -2,3 +2,16 @@
 #todolist .MuiListItemText-root span {
   user-select: none;
 }
+
+#todolist .MuiListItem-root {
+  min-height: 60px;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+#todolist .MuiListItem-root.focused .MuiListItemText-root {
+  max-width: 370px;
+  /* margin-right: 10px; */
+}
+#todolist .MuiListItem-root .MuiFab-sizeSmall {
+  margin-left: 10px;
+}

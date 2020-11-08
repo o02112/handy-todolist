@@ -19,58 +19,67 @@ export const useTodoListHook = () => {
   }
 
   const reducer = (state, action) => {
+    let finalState;
     let textEditorValue;
     textEditorValue = textEditorRef.current ? textEditorRef.current.value : '';
 
     switch (action.type) {
       case 'focusChange':
-        return {
+        finalState = {
           payload: {
             ...state.payload,
-            editItemId: 0,
-            focusItemId: action.payload.focusItemId,
             textEditorValue,
+            editItemId: 0,
+            focusItemId: action.payload.focusItemId
           }
         }
+      break;
       case 'editingStartNew':
-
-        return {
+        finalState = {
           payload: {
             ...state.payload,
-            editItemId: action.payload.editItemId,
-            focusItemId: action.payload.focusItemId, // 进入编辑状态时，自动设置聚焦
             textEditorValue,
+            ...action.payload,
           }
         }
+      break;
       case 'editingOut':
-        return {
+        // 编辑状态点击空白处，退出编辑，仍保留聚焦状态
+        finalState = {
           payload: {
             ...state.payload,
+            textEditorValue,
             editItemId: 0,
-            textEditorValue,
           }
         }
+      break;
       case 'focusOut':
-        return {
+        finalState = {
           payload: {
             ...state.payload,
-            focusItemId: 0,
             textEditorValue,
+            focusItemId: 0,
           }
         }
+      break;
       case 'toggleFinish':
-        return {
+        finalState = {
           payload: {
             ...state.payload,
             toggleItemIds: {
               ...state.payload.toggleItemIds,
-              ...action.payload.toggleItemIds
+              ...action.payload,
             }
           }
         }
+      break;
       default:
-        return { payload: {...state.payload} }
+        finalState = { payload: {...state.payload} }
+      break;
     }
+
+    // console.log(action.type, finalState);
+    return finalState;
   }
 
   const [itemState, dispatch] = useReducer(reducer, initState);
@@ -111,7 +120,6 @@ export const useTodoListHook = () => {
     const focusOut = prevState.editItemId === 0 && prevState.focusItemId !== 0
 
     if(editingOut) {
-      // 编辑状态点击空白处，退出编辑，仍保留聚焦状态
       dispatch({ type: 'editingOut' });
     } else if(focusOut) {
       dispatch({ type: 'focusOut' });

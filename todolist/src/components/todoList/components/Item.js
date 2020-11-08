@@ -45,9 +45,9 @@ const Item = (props) => {
           autoFocus={true}
           placeholder="Edit TODO..."
           defaultValue={title}
-          rowsMin={5}
-          style={{ width: '516px' }}
-        />)
+          rowsMin={6}
+          style={{ width: '506px', padding: '5px' }} />
+      )
     } else {
       return title;
     }
@@ -59,8 +59,10 @@ const Item = (props) => {
     exit: theme.transitions.duration.leavingScreen
   };
 
+  const className = focusIn ? 'focused' : '';
+
   return (
-    <ListItem selected={focusIn} onClick={titleClick}>
+    <ListItem selected={focusIn} onClick={titleClick} className={className}>
       {
         finished
         ? <ListItemIcon><DoneIcon/></ListItemIcon>
