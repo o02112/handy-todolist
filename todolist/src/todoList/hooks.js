@@ -1,10 +1,10 @@
 import {useState, useEffect, useReducer, useRef} from 'react';
-import {
+import dataStorage from './dataStorage/index';
+const {
   queryListItem,
   queryAddItem,
   queryDeleteItem,
-} from './urls';
-
+} = dataStorage
 
 export const useTodoListHook = () => {
   const [todos, setTodos] = useState([]);
@@ -89,7 +89,7 @@ export const useTodoListHook = () => {
   }, []);
 
   const queryTodoList = () => {
-    queryListItem().then((data = []) => { console.log(data);
+    queryListItem().then((data = []) => {
       setTodos(data)
     })
   }

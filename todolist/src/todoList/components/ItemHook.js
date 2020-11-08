@@ -1,7 +1,13 @@
 import { useState, useEffect, useContext } from 'react';
 
 import {todoListContext} from '../context';
-import {queryToggleFinishItem, queryUpdateItem} from '../urls';
+import dataStorage from '../dataStorage';
+
+const {
+  queryToggleFinishItem,
+  queryUpdateItem
+} = dataStorage;
+
 let clickTimeout;
 let isPending = false;
 
