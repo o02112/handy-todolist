@@ -107,7 +107,7 @@ export const useItemHook = (props) => {
     const onClickDoneOrRefreshIcon = () => {
       queryToggleFinishItem(propsTodoItem.item_id)
         .then((data = {}) => {
-          if(data.data && data.data.rowCount) {
+          if(data.rowCount) {
             dispatch({
               type: 'toggleFinish',
               payload: {
@@ -125,8 +125,7 @@ export const useItemHook = (props) => {
       setTitleState(newTitle);
       queryUpdateItem(newTitle, propsTodoItem.item_id)
         .then((data = {}) => {
-          console.log(data);
-          if(data.data && data.data.rowCount) {
+          if(data.rowCount) {
             // 更新成功
           }
         })

@@ -5,7 +5,7 @@ import Item from './Item';
 
 function ItemList(props) {
 
-  return (<List  id="todolist">
+  return (<List id="todolist">
     {
       props.todos.map((todoItem, index) => (
         <div key={"todolist-" + index}>

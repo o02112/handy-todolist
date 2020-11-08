@@ -89,8 +89,8 @@ export const useTodoListHook = () => {
   }, []);
 
   const queryTodoList = () => {
-    queryListItem().then((data = {}) => {
-      setTodos(data.data || [])
+    queryListItem().then((data = []) => { console.log(data);
+      setTodos(data)
     })
   }
 
@@ -98,7 +98,7 @@ export const useTodoListHook = () => {
   const addItem = title => {
     queryAddItem(title)
       .then((data = {}) => {
-        if (data.data && data.data.rowCount) {
+        if (data.rowCount) {
           queryTodoList();
         }
     })
@@ -107,7 +107,7 @@ export const useTodoListHook = () => {
   const deleteItem = itemId => {
     queryDeleteItem(itemId)
       .then((data = {}) => {
-        if(data.data && data.data.rowCount) {
+        if(data.rowCount) {
           queryTodoList();
         }
       })

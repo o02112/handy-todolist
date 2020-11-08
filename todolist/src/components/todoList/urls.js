@@ -1,14 +1,12 @@
-
 export const urls = {
   listItemUrl: 'http://localhost:5000/api/todolist/listItem',
   addItemUrl: 'http://localhost:5000/api/todolist/addItem',
   updateItemUrl: 'http://localhost:5000/api/todolist/updateItem',
   finisheItemUrl: 'http://localhost:5000/api/todolist/finishItem',
-  deleteItemUrl: 'http://localhost:5000/api/todolist/deleteItem',
+  deleteItemUrl: 'http://localhost:5000/api/todolist/deleteItem'
 }
 
-
-export const post = (url, data={}) => {
+export const post = (url, data = {}) => {
   return fetch(url, {
     credentials: 'same-origin',
     method: 'POST',
@@ -19,49 +17,39 @@ export const post = (url, data={}) => {
   })
 }
 
-
 export const get = (url, data) => {
   return fetch(url, {
     method: 'GET',
-    body: JSON.stringify(data),
+    body: JSON.stringify(data)
   })
 }
-
 
 export const queryListItem = () => {
   return post(urls.listItemUrl)
-    .then(response => {
-      return response.json();
-    })
+    .then(response => response.json())
+    .then(responseJson => responseJson.data)
 }
 
 export const queryAddItem = (title) => {
-  return post(urls.addItemUrl, { title })
-    .then(response => {
-      return response.json();
-    })
+  return post(urls.addItemUrl, {title})
+    .then(response => response.json())
+    .then(responseJson => responseJson.data)
 }
-
 
 export const queryUpdateItem = (title, itemId) => {
-  return post(urls.updateItemUrl, { title, itemId })
-    .then(response => {
-      return response.json();
-    })
+  return post(urls.updateItemUrl, {title, itemId})
+    .then(response => response.json())
+    .then(responseJson => responseJson.data)
 }
-
 
 export const queryToggleFinishItem = (itemId) => {
-  return post(urls.finisheItemUrl, { itemId })
-  .then(response => {
-    return response.json();
-  })
+  return post(urls.finisheItemUrl, {itemId})
+    .then(response => response.json())
+    .then(responseJson => responseJson.data)
 }
 
-
 export const queryDeleteItem = (itemId) => {
-  return post(urls.deleteItemUrl, { itemId })
-  .then(response => {
-    return response.json();
-  })
+  return post(urls.deleteItemUrl, {itemId})
+    .then(response => response.json())
+    .then(responseJson => responseJson.data)
 }
