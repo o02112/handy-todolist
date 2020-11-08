@@ -5,12 +5,10 @@ const router = Router()
 const { insertItem, updateItem, deleteItem, listItem, toggleItem } = require('./db')
 
 
-
 router.post('/test', (req, res) => {
   console.log(req.body)
   res.status(200).json({ msg: 'hello.' })
 })
-
 
 
 router.post('/listItem', (req, res) => {
@@ -28,7 +26,6 @@ router.post('/listItem', (req, res) => {
 })
 
 
-
 router.post('/addItem', (req, res) => {
   const title = req.body.title || ''
   if(!title) {
@@ -43,7 +40,6 @@ router.post('/addItem', (req, res) => {
 })
 
 
-
 router.post('/updateItem', (req, res) => {
   const { title = '', itemId = 0 } = req.body;
   if(!title) {
@@ -54,12 +50,12 @@ router.post('/updateItem', (req, res) => {
     return
   }
 
-
   updateItem({ title, itemId }, (err, response) => {
     console.log(err, response)
     res.status(200).json({ err, data: { rowCount: response.rowCount }})
   })
 })
+
 
 router.post('/finishItem', (req, res) => {
   const { itemId = 0 } = req.body;
@@ -70,7 +66,6 @@ router.post('/finishItem', (req, res) => {
   })
 
 })
-
 
 
 router.post('/deleteItem', (req, res) => {

@@ -3,7 +3,6 @@ import React, { useCallback } from 'react';
 import {Container, ClickAwayListener} from '@material-ui/core';
 import TodoItemInput from './components/ItemInput';
 import TodoItemList from './components/ItemList';
-// import { todos, setTodos, handleClickAway } from './hooks'
 
 import './index.css'
 import {todoListContext} from './context';
@@ -12,7 +11,6 @@ import {useTodoListHook} from './hooks'
 const TodoList = () => {
   const {
     todos,
-    // setTodos,
     addItem,
     deleteItem,
     itemState,

@@ -8,7 +8,7 @@ export const urls = {
 }
 
 
-export const post = (url, data={}) => { console.log(data);
+export const post = (url, data={}) => {
   return fetch(url, {
     credentials: 'same-origin',
     method: 'POST',

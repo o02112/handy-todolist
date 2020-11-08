@@ -20,9 +20,8 @@ export const useTodoListHook = () => {
     }
   }
 
-  const reducer = (state, action) => { console.log('reducer', action);
+  const reducer = (state, action) => {
     let textEditorValue;
-    // const editingJump = state.payload.editItemId !== 0 && state.payload.focusItemId !== 0
     textEditorValue = textEditorRef.current ? textEditorRef.current.value : '';
 
     switch (action.type) {
@@ -65,7 +64,10 @@ export const useTodoListHook = () => {
         return {
           payload: {
             ...state.payload,
-            toggleItemIds: {...action.payload.toggleItemIds}
+            toggleItemIds: {
+              ...state.payload.toggleItemIds,
+              ...action.payload.toggleItemIds
+            }
           }
         }
       default:
@@ -118,7 +120,6 @@ export const useTodoListHook = () => {
     }
   }
 
-
   return {
     todos,
     addItem,
@@ -128,5 +129,4 @@ export const useTodoListHook = () => {
     dispatch,
     textEditorRef,
   }
-
 }

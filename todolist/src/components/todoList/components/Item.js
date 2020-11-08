@@ -11,14 +11,12 @@ import {
   TextareaAutosize,
 } from '@material-ui/core';
 import {withStyles, useTheme} from '@material-ui/core/styles';
-// import { DoneIcon } from '@material-ui/icons/Done';
 import {
   Done as DoneIcon,
   EditSharp as EditIcon,
   DeleteOutlineSharp as DeleteIcon,
   Refresh as RefreshIcon,
 } from '@material-ui/icons';
-// import ItemOptions from './ItemOptions'
 
 import { useItemHook } from './ItemHook';
 
@@ -69,40 +67,44 @@ const Item = (props) => {
     <ListItem selected={focusIn} onClick={titleClick}>
       {
         finished
-          ? <ListItemIcon><DoneIcon/></ListItemIcon>
-          : null
+        ? <ListItemIcon><DoneIcon/></ListItemIcon>
+        : null
       }
       {
         finished
-          ? <StyledListItemText primary={<ItemTitle />}/>
-          : <ListItemText primary={<ItemTitle />}/>
+        ? <StyledListItemText primary={<ItemTitle />}/>
+        : <ListItemText primary={<ItemTitle />}/>
       }
 
       {
         editing
         ? null
         : (<>
-          <Zoom in={focusIn} timeout={transitionDuration} unmountOnExit>
-            <Fab size="small" onClick={onClickDoneOrRefreshIcon}>
+            <Zoom in={focusIn} timeout={transitionDuration} unmountOnExit>
+              <Fab size="small" onClick={onClickDeleteIcon}>
+                <DeleteIcon/>
+              </Fab>
+            </Zoom>
+
+            {
+              finished
+              ? null
+              :(<Zoom in={focusIn} timeout={transitionDuration} unmountOnExit>
+                <Fab size="small" onClick={onClickEditIcon}>
+                  <EditIcon/>
+                </Fab>
+              </Zoom>)
+            }
+
+            <Zoom in={focusIn} timeout={transitionDuration} unmountOnExit>
+              <Fab size="small" onClick={onClickDoneOrRefreshIcon}>
               {
                 finished
                 ? <RefreshIcon />
                 : <DoneIcon/>
               }
-            </Fab>
-          </Zoom>
-
-          <Zoom in={focusIn} timeout={transitionDuration} unmountOnExit>
-            <Fab size="small" onClick={onClickEditIcon}>
-              <EditIcon/>
-            </Fab>
-          </Zoom>
-
-          <Zoom in={focusIn} timeout={transitionDuration} unmountOnExit>
-            <Fab size="small" onClick={onClickDeleteIcon}>
-              <DeleteIcon/>
-            </Fab>
-          </Zoom>
+              </Fab>
+            </Zoom>
         </>)
       }
 

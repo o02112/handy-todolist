@@ -2,6 +2,8 @@ import { useState, useEffect, useContext } from 'react';
 
 import {todoListContext} from '../context';
 import {queryToggleFinishItem, queryUpdateItem, queryDeleteItem} from '../urls';
+let clickTimeout;
+let pending = false;
 
 
 export const useItemHook = (props) => {
@@ -13,13 +15,11 @@ export const useItemHook = (props) => {
     const [title, setTitleState] = useState(propsTodoItem.item_title)
     const {dispatch, itemState, textEditorRef} = useContext(todoListContext)
 
-    let pending = false;
-    let clickTimeout;
 
     useEffect(() => {
       handleFocusState(itemState);
       handleFinishState(itemState);
-    }, [itemState]);
+    }, [propsTodoItem, itemState]);
 
     useEffect(() => {
       setTitleState(propsTodoItem.item_title)
@@ -49,16 +49,15 @@ export const useItemHook = (props) => {
       const newStateEdit = newState.payload.editItemId === propsTodoItem.item_id;
       const editEnd = (editing && !newStateEdit); // 完成编辑
 
-      if(editEnd) { console.log(newState.payload);
+      if(editEnd) {
         onUpdate(newState.payload.textEditorValue);
       }
-
       setFocusState(newStatefocus);
       setEditingState(newStateEdit);
-
     }
 
     const changeIntoEditMode = () => {
+      if(finished) return;
       dispatch({
         type: 'editingStartNew',
         payload: {
@@ -72,10 +71,8 @@ export const useItemHook = (props) => {
     const titleClick = () => {
 
       // 编辑状态下，不响应点击
-      // 不需要再次聚焦或进入编辑状态
       if (editing) return;
-
-      if (pending) { // 双击
+      if (pending && focusIn) { // 双击
         changeIntoEditMode();
 
         clearTimeout(clickTimeout);
@@ -85,15 +82,14 @@ export const useItemHook = (props) => {
 
       // 单击，聚焦
       pending = true;
+      if(focusIn) return;
+      dispatch({
+        type: 'focusChange',
+        payload: { focusItemId: propsTodoItem.item_id }
+      })
 
       clickTimeout = setTimeout(() => {
         pending = false;
-
-        if(focusIn) return;
-        dispatch({
-          type: 'focusChange',
-          payload: { focusItemId: propsTodoItem.item_id }
-        })
       }, 250);
     }
 
@@ -118,7 +114,6 @@ export const useItemHook = (props) => {
               }
             })
           }
-
         })
     }
 
@@ -134,7 +129,6 @@ export const useItemHook = (props) => {
           }
         })
     }
-
 
     return {
       title,
