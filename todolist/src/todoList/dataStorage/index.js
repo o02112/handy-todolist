@@ -1,2 +1,2 @@
-import storageConfig from '../config';
+import storageConfig from './config';
 export default require('./' + storageConfig.storageType);

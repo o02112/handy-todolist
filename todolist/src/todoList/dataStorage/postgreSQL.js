@@ -33,23 +33,23 @@ export const queryListItem = () => {
 export const queryAddItem = (title) => {
   return post(urls.addItemUrl, {title})
     .then(response => response.json())
-    .then(responseJson => responseJson.data)
+    .then(responseJson => responseJson)
 }
 
-export const queryUpdateItem = (title, itemId) => {
-  return post(urls.updateItemUrl, {title, itemId})
+export const queryUpdateItem = (itemId, title) => {
+  return post(urls.updateItemUrl, {itemId, title})
     .then(response => response.json())
-    .then(responseJson => responseJson.data)
+    .then(responseJson => responseJson)
 }
 
 export const queryToggleFinishItem = (itemId) => {
   return post(urls.finisheItemUrl, {itemId})
     .then(response => response.json())
-    .then(responseJson => responseJson.data)
+    .then(responseJson => responseJson)
 }
 
 export const queryDeleteItem = (itemId) => {
   return post(urls.deleteItemUrl, {itemId})
     .then(response => response.json())
-    .then(responseJson => responseJson.data)
+    .then(responseJson => responseJson)
 }

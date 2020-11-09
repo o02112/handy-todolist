@@ -112,8 +112,8 @@ export const useItemHook = (props) => {
 
     const onClickDoneOrRefreshIcon = () => {
       queryToggleFinishItem(propsTodoItem.item_id)
-        .then((data = {}) => {
-          if(data.rowCount) {
+        .then((response = {}) => {
+          if(response.data.rowCount) {
             dispatch({
               type: 'toggleFinish',
               payload: {
@@ -129,9 +129,9 @@ export const useItemHook = (props) => {
       if(newTitle.trim() === title || newTitle.trim() === '') return;
 
       setTitleState(newTitle);
-      queryUpdateItem(newTitle, propsTodoItem.item_id)
-        .then((data = {}) => {
-          if(data.rowCount) {
+      queryUpdateItem(propsTodoItem.item_id, newTitle)
+        .then((response = {}) => {
+          if(response.data.rowCount) {
             // 更新成功
           }
         })

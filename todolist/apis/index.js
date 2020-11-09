@@ -1,14 +1,12 @@
 const { Router } = require('express')
-// const jwt = require('jsonwebtoken')
-// const {check, validationResult} = require('express-validator')
 const router = Router()
-const { insertItem, updateItem, deleteItem, listItem, toggleItem } = require('./db')
-
-
-router.post('/test', (req, res) => {
-  console.log(req.body)
-  res.status(200).json({ msg: 'hello.' })
-})
+const {
+  insertItem,
+  updateItem,
+  deleteItem,
+  listItem,
+  toggleItem,
+} = require('./db')
 
 
 router.post('/listItem', (req, res) => {
@@ -19,10 +17,8 @@ router.post('/listItem', (req, res) => {
       return
     }
 
-    console.log(response);
-    res.json({ err, data: response.rows });
+    res.json({ err, data: { data: response.rows } });
   })
-
 })
 
 
