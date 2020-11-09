@@ -89,7 +89,7 @@ export const useTodoListHook = () => {
   }, []);
 
   const queryTodoList = () => {
-    queryListItem().then((response = {}) => {
+    queryListItem().then((response = {}) => { console.log(response);
       setTodos(response.data || [])
     })
   }

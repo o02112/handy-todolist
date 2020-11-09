@@ -1,3 +1,3 @@
 export default {
-  storageType: 'localStorage', // postgreSQL, localStorage, mongoDB
+  storageType: 'postgreSQL', // postgreSQL, localStorage, mongoDB
 }

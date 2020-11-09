@@ -6,7 +6,7 @@ const {
   deleteItem,
   listItem,
   toggleItem,
-} = require('./db')
+} = require('./postgreSQL'); // postgreSQL, mongoDB
 
 
 router.post('/listItem', (req, res) => {
@@ -17,7 +17,7 @@ router.post('/listItem', (req, res) => {
       return
     }
 
-    res.json({ err, data: { data: response.rows } });
+    res.json({ err, data: response.data });
   })
 })
 

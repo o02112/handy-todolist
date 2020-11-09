@@ -1,4 +1,3 @@
-
 const pg = require('pg')
 
 const pool = new pg.Pool({
@@ -24,7 +23,7 @@ const queryDB = ({
 
     client.query(sql, param, (error, response) => {
       done()
-      // console.log(response);
+      console.log(response);
 
       callback(error, response);
     })
@@ -36,7 +35,9 @@ const listItem = (cb) => {
   queryDB({
     sql: 'select * from todolist order by item_created desc',
     // param: [itemId],
-    callback: cb
+    callback: (error, response) => {
+      cb(error, { data: response.rows });
+    }
   })
 }
 
@@ -75,4 +76,4 @@ const deleteItem = (itemId, cb) => {
 }
 
 
-module.exports = { insertItem, updateItem, deleteItem, listItem, toggleItem };
+module.exports = { listItem, insertItem, updateItem, toggleItem, deleteItem };

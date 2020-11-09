@@ -27,7 +27,7 @@ export const get = (url, data) => {
 export const queryListItem = () => {
   return post(urls.listItemUrl)
     .then(response => response.json())
-    .then(responseJson => responseJson.data)
+    .then(responseJson => responseJson)
 }
 
 export const queryAddItem = (title) => {

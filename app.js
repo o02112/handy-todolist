@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const config = require('config')
 const app = express();
+const mongoose = require('mongoose');
 
 
 const PORT = config.get('port');
@@ -30,7 +31,11 @@ if(process.env.NODE_ENV === 'production') {
 // app code
 app.use('/api/' + APPNAME, require('./' + APPNAME + '/apis' ))
 
+mongoose.connect('mongodb://localhost:27017/todolistDB', {useNewUrlParser: true, useUnifiedTopology: true})
+  .then(() => {
 
-app.listen(PORT, () => {
-  console.log(`The server is now running on port ${PORT}...`)
-});
+    app.listen(PORT, () => {
+      console.log(`The server is now running on port ${PORT}...`)
+    });
+
+  })
