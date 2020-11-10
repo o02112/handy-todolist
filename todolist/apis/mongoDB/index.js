@@ -2,29 +2,12 @@ const mongoose = require('mongoose');
 const TodoSchema = require('./schema');
 const { v4: uuidv4 } = require('uuid');
 
-/*
-  const createTodo = new TodoSchema({
-    item_id: uuidv4(),
-    item_title: 'first todo title',
-  });
-
-  createTodo.save().then((d) => {
-
-    createTodo.find().then(data => {
-      console.log(data);
-    });
-  })
-
-*/
 
 
 const listItem = (cb) => {
-  TodoSchema.find().then(data => {
-    console.log('list ------------/', data);
-
+  TodoSchema.find().sort('-item_created').then(data => {
     cb(null, { data })
   });
-
 }
 
 
@@ -34,7 +17,6 @@ const insertItem = (title, cb) => {
     item_title: title,
   });
   createTodo.save().then(data => {
-    console.log('insert ------------/', data);
     cb(null, { rowCount: 1 })
   })
 
@@ -48,7 +30,6 @@ const updateItem = ({title = '', itemId=0 } = {}, cb) => {
 
       data.save()
       .then(data => {
-        console.log('update ------------/', data);
         cb(null, { rowCount: 1 })
       })
     })
@@ -62,7 +43,6 @@ const toggleItem = ({ itemId = 0 } = {}, cb) => {
 
       data.save()
       .then(data => {
-        console.log('toggle ------------/', data);
         cb(null, { rowCount: 1 })
       })
     })
@@ -72,7 +52,6 @@ const toggleItem = ({ itemId = 0 } = {}, cb) => {
 const deleteItem = (itemId, cb) => {
   TodoSchema.deleteOne({ item_id: itemId })
     .then(data => {
-      console.log('delete ------------/', data);
       cb(null, { rowCount: 1 })
     })
 
