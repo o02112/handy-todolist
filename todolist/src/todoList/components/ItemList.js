@@ -3,7 +3,7 @@ import {List, Divider} from '@material-ui/core';
 
 import Item from './Item';
 
-function ItemList(props) { console.log(props);
+function ItemList(props) {
 
   return (<List id="todolist">
     {

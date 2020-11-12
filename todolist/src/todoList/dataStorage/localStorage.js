@@ -3,38 +3,48 @@ const LS = window.localStorage;
 if(LS === undefined) {
   throw new Error('window.localStorage is not supported.')
 }
-const LSKEY = 'handy-todolist';
+const LS_TODOLIST_KEY = 'handy-todolist';
+const LS_SORT_ARRAY_KEY = 'handy-todolist-sort';
 
 
-const getLSData = () => {
-  let lsData = LS.getItem(LSKEY);
+const getLSData = (lsKey = LS_TODOLIST_KEY) => {
+  let lsData = LS.getItem(lsKey);
+  let initData;
 
   if(!lsData) {
-    LS.setItem(LSKEY, JSON.stringify({}));
-    console.log('localstorage initialized.');
-    return {};
+    switch (lsKey) {
+      case LS_TODOLIST_KEY:
+        initData = {};
+      break;
+      case LS_SORT_ARRAY_KEY:
+        initData = [];
+      break;
+    }
+    setLSData(initData, lsKey);
+    return initData;
   } else {
     lsData = JSON.parse(lsData);
-
     return lsData;
   }
 }
-const setLSData = (data) => {
-  LS.setItem(LSKEY, JSON.stringify(data));
+const setLSData = (data, lsKey=LS_TODOLIST_KEY) => {
+  LS.setItem(lsKey, JSON.stringify(data));
 }
-const setTodoItem = (id, value) => {
+
+
+
+const lsAddTodoSortItem = (itemId) => {
+  const sortArray = getLSData(LS_SORT_ARRAY_KEY);
+  sortArray.unshift(itemId.toString());
+  setLSData(sortArray, LS_SORT_ARRAY_KEY);
+}
+
+
+const lsAddTodoItem = (id, value) => {
   const lsData = getLSData();
   lsData[id] = value;
 
   setLSData(lsData);
-}
-const modifyItem = (itemId, callback) => {
-  const itemData = getTodoItem(itemId);
-  if(typeof callback === 'function') {
-    callback(itemData);
-  }
-
-  setTodoItem(itemId, itemData);
 }
 const getTodoItem = (id) => {
   const itemData = getLSData()[id];
@@ -45,13 +55,51 @@ const getTodoItem = (id) => {
   return itemData;
 }
 
+const modifyItem = (itemId, callback) => {
+  const itemData = getTodoItem(itemId);
+  if(typeof callback === 'function') {
+    callback(itemData);
+  }
+
+  lsAddTodoItem(itemId, itemData);
+}
+
+
+// 将以item_id为key的 todosObject
+// 按排序数组sortArray排序后，转换为数组结构
+// 返回，做为最终展示数据 resultArray
+const sortTodosObjectToArray = (todosObject={}) => {
+  let resultArray = [];
+  const tmpArray = []; // 容错，保存未排序或排序有误的项，并将其置于结果数组末尾
+  const sortArray = getLSData(LS_SORT_ARRAY_KEY);
+  for(let todoItemId in todosObject) {
+    const index = sortArray.indexOf(todoItemId);
+
+    if(index === -1) {
+      tmpArray.push(todosObject[todoItemId]);
+    } else if(resultArray[index]){
+      tmpArray.push(todosObject[todoItemId]);
+    } else {
+      resultArray[index] = todosObject[todoItemId];
+    }
+
+    resultArray = resultArray.concat(tmpArray);
+  }
+
+  // 排序数据 sortArray 中没有数据时
+  // 将现有的顺序保存到localStorage
+  // 此情景在初次使用时出现
+  if(sortArray.length === 0) {
+    setLSData(tmpArray.map(todoItem => todoItem['item_id']), LS_SORT_ARRAY_KEY)
+  }
+
+  return resultArray;
+}
+
 
 export const queryListItem = () => {
   const lsData = getLSData();
-  const todoList = [];
-  for(let itemId in lsData) {
-    todoList.unshift(lsData[itemId]);
-  }
+  const todoList = sortTodosObjectToArray(lsData);
 
   return Promise.resolve({ err: null, data: todoList});
 }
@@ -72,7 +120,9 @@ export const queryAddItem = (title) => {
     item_last_update: createTime,
   }
 
-  setTodoItem(createTime, initItemData);
+  lsAddTodoItem(createTime, initItemData);
+  lsAddTodoSortItem(createTime);
+
   return Promise.resolve({ err: null, data: { rowCount: 1 }});
 }
 
