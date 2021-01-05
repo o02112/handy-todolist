@@ -10,24 +10,23 @@ import {useTodoListHook} from './hooks'
 
 const TodoList = () => {
   const {
-    todos,
     addItem,
     deleteItem,
-    itemState,
+    todoListAppState,
     dispatch,
     handleClickAway,
     textEditorRef,
   } = useTodoListHook();
 
 
-  return (<todoListContext.Provider value={{ dispatch, itemState, textEditorRef }}>
+  return (<todoListContext.Provider value={{ dispatch, todoListAppState, textEditorRef }}>
     <ClickAwayListener onClickAway={handleClickAway}>
       <Container maxWidth="sm" style={{
           paddingTop: 40
         }}>
         <TodoItemInput addItem={addItem}/>
 
-        <TodoItemList todos={todos} deleteItem={deleteItem}/>
+        <TodoItemList deleteItem={deleteItem}/>
       </Container>
     </ClickAwayListener>
   </todoListContext.Provider>)

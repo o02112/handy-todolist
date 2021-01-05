@@ -1,5 +1,7 @@
-import {useState, useEffect, useReducer, useRef} from 'react';
+import {useState, useEffect, useReducer } from 'react';
 import dataStorage from './dataStorage/index';
+import { SET_TODOS, FOCUS_OUT } from './actionTypes';
+import Reducer from './reducer';
 const {
   queryListItem,
   queryAddItem,
@@ -7,82 +9,12 @@ const {
 } = dataStorage
 
 export const useTodoListHook = () => {
-  const [todos, setTodos] = useState([]);
-  const textEditorRef = useRef();
 
   const initState = {
-    payload: {
-      editItemId: 0,
-      focusItemId: 0,
-      toggleItemIds: {},
-    }
+    todos: [], // todo 数据列表
+    itemsStates: {}, // todo项的状态，如 { <item_id>: { editing: false, focusing: true, .. }, <item_id2>: {...} }
   }
-
-  const reducer = (state, action) => {
-    let finalState;
-    let textEditorValue;
-    textEditorValue = textEditorRef.current ? textEditorRef.current.value : '';
-
-    switch (action.type) {
-      case 'focusChange':
-        finalState = {
-          payload: {
-            ...state.payload,
-            textEditorValue,
-            editItemId: 0,
-            focusItemId: action.payload.focusItemId
-          }
-        }
-      break;
-      case 'editingStartNew':
-        finalState = {
-          payload: {
-            ...state.payload,
-            textEditorValue,
-            ...action.payload,
-          }
-        }
-      break;
-      case 'editingOut':
-        // 编辑状态点击空白处，退出编辑，仍保留聚焦状态
-        finalState = {
-          payload: {
-            ...state.payload,
-            textEditorValue,
-            editItemId: 0,
-          }
-        }
-      break;
-      case 'focusOut':
-        finalState = {
-          payload: {
-            ...state.payload,
-            textEditorValue,
-            focusItemId: 0,
-          }
-        }
-      break;
-      case 'toggleFinish':
-        finalState = {
-          payload: {
-            ...state.payload,
-            toggleItemIds: {
-              ...state.payload.toggleItemIds,
-              ...action.payload,
-            }
-          }
-        }
-      break;
-      default:
-        finalState = { payload: {...state.payload} }
-      break;
-    }
-
-    // console.log(action.type, finalState);
-    return finalState;
-  }
-
-  const [itemState, dispatch] = useReducer(reducer, initState);
+  const [todoListAppState, dispatch] = useReducer(Reducer, initState);
 
   useEffect(() => {
     queryTodoList();
@@ -90,11 +22,14 @@ export const useTodoListHook = () => {
 
   const queryTodoList = () => {
     queryListItem().then((response = {}) => { console.log(response);
-      setTodos(response.data || [])
+      dispatch({
+        type: SET_TODOS,
+        payload: {
+          todos: response.data || [],
+        }
+      });
     })
   }
-
-
   const addItem = title => {
     queryAddItem(title)
       .then((response = {}) => {
@@ -103,7 +38,6 @@ export const useTodoListHook = () => {
         }
     })
   }
-
   const deleteItem = itemId => {
     queryDeleteItem(itemId)
       .then((response = {}) => {
@@ -114,25 +48,14 @@ export const useTodoListHook = () => {
   }
 
   const handleClickAway = () => {
-
-    let prevState = itemState.payload;
-    const editingOut = prevState.editItemId !== 0 && prevState.focusItemId !== 0
-    const focusOut = prevState.editItemId === 0 && prevState.focusItemId !== 0
-
-    if(editingOut) {
-      dispatch({ type: 'editingOut' });
-    } else if(focusOut) {
-      dispatch({ type: 'focusOut' });
-    }
+    dispatch({ type: FOCUS_OUT });
   }
 
   return {
-    todos,
     addItem,
     deleteItem,
     handleClickAway,
-    itemState,
+    todoListAppState,
     dispatch,
-    textEditorRef,
   }
 }

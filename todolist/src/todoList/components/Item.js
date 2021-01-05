@@ -29,12 +29,13 @@ const Item = (props) => {
   const {
     title,
     editing,
-    focusIn,
+    focusing,
     finished,
     titleClick,
     onClickEditIcon,
     onClickDeleteIcon,
     onClickDoneOrRefreshIcon,
+    onEditTitle,
     textEditorRef,
   } = useItemHook(props);
   const ItemTitle = () => {
@@ -45,6 +46,7 @@ const Item = (props) => {
           autoFocus={true}
           placeholder="Edit TODO..."
           defaultValue={title}
+          onChange={e => onEditTitle(e.target.value)}
           rowsMin={6}
           style={{ width: '506px', padding: '5px' }} />
       )
@@ -59,10 +61,10 @@ const Item = (props) => {
     exit: theme.transitions.duration.leavingScreen
   };
 
-  const className = focusIn ? 'focused' : '';
+  const className = focusing ? 'focused' : '';
 
   return (
-    <ListItem selected={focusIn} onClick={titleClick} className={className}>
+    <ListItem selected={focusing} onClick={titleClick} className={className}>
       {
         finished
         ? <ListItemIcon><DoneIcon/></ListItemIcon>
@@ -78,7 +80,7 @@ const Item = (props) => {
         editing
         ? null
         : (<>
-            <Zoom in={focusIn} timeout={transitionDuration} unmountOnExit>
+            <Zoom in={focusing} timeout={transitionDuration} unmountOnExit>
               <Fab size="small" onClick={onClickDeleteIcon}>
                 <DeleteIcon/>
               </Fab>
@@ -87,14 +89,14 @@ const Item = (props) => {
             {
               finished
               ? null
-              :(<Zoom in={focusIn} timeout={transitionDuration} unmountOnExit>
+              :(<Zoom in={focusing} timeout={transitionDuration} unmountOnExit>
                 <Fab size="small" onClick={onClickEditIcon}>
                   <EditIcon/>
                 </Fab>
               </Zoom>)
             }
 
-            <Zoom in={focusIn} timeout={transitionDuration} unmountOnExit>
+            <Zoom in={focusing} timeout={transitionDuration} unmountOnExit>
               <Fab size="small" onClick={onClickDoneOrRefreshIcon}>
               {
                 finished
