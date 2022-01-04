@@ -24,9 +24,11 @@ const TodoList = () => {
       <Container maxWidth="sm" style={{
           paddingTop: 40
         }}>
-        <TodoItemInput addItem={addItem}/>
+        <div id="todo-app">
+          <TodoItemInput addItem={addItem}/>
 
-        <TodoItemList deleteItem={deleteItem}/>
+          <TodoItemList deleteItem={deleteItem}/>
+        </div>
       </Container>
     </ClickAwayListener>
   </todoListContext.Provider>)
