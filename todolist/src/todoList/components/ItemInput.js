@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Grid, Input, Button } from '@material-ui/core';
+import { useItemInputHook } from './ItemInputHook';
 
 
 const ItemInput = (props) => {
-  const [title, changeTitle] = useState('');
-
-  const addItem = title => {
-    title = title.trim();
-    if(title === '') return;
-    
-    props.addItem(title);
-    changeTitle('');
-  }
+  const {
+    title,
+    addItem,
+    focusIn,
+    changeTitle,
+    getInputRef,
+    // iRef,
+  } = useItemInputHook(props);
 
   return (
     <Grid container>
@@ -26,6 +26,8 @@ const ItemInput = (props) => {
           fullWidth={true}
           placeholder="TODO..."
           inputProps={{ 'aria-label': 'TODO...' }}
+          onFocus={() => focusIn()}
+          // inputRef={iRef}
         />
       </Grid>
 

@@ -47,7 +47,7 @@ const Item = (props) => {
           placeholder="Edit TODO..."
           defaultValue={title}
           onChange={e => onEditTitle(e.target.value)}
-          rowsMin={6}
+          minRows={6}
           style={{ width: '506px', padding: '5px' }} />
       )
     } else {
