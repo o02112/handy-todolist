@@ -1,20 +1,42 @@
 {
-  "name": "mern",
-  "version": "1.0.0",
-  "description": "MariaDB + ExpressJs + ReactJs + NodeJs project course startup.",
-  "main": "app.js",
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "config": "^3.3.2",
-    "express": "^4.17.1",
-    "mongoose": "^5.10.12",
-    "pg": "^8.4.2",
-    "uuid": "^8.3.1"
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@shopify/draggable": "^1.0.0-beta.8",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-scripts": "4.0.0",
+    "sass": "^1.45.2",
+    "web-vitals": "^0.2.4"
   },
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }
