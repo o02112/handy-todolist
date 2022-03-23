@@ -1,0 +1,11 @@
+#todo-lines {
+  outline: none;
+  min-height: 300px;
+  border: 1px solid #ccc;
+  padding: 5px;
+
+  > div {
+    cursor: grab;
+  }
+  
+}
