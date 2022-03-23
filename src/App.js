@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 
-// import TodoList from './todoList';
+import TodoList from './todoList';
 import TodoLines from './todoLines';
 
 // import { Sortable } from '@shopify/draggable';
@@ -12,8 +12,8 @@ function App() {
 
   return (
     <div className="App">
-      {/* <TodoList /> */}
-      <TodoLines />
+      <TodoList />
+      {/* <TodoLines /> */}
       
 {/*
       <ul>
